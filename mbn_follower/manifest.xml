@@ -10,6 +10,9 @@
   <url>http://ros.org/wiki/mbn_follower</url>
   <depend package="roscpp" />
   <depend package="nav_msgs" />
+  <depend package="mbn_msgs" />
+  <depend package="mbn_marker_locator" />
+
 </package>
 
 

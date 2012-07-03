@@ -1,0 +1,4 @@
+int32 MarkerId
+---
+string pose_ref_frame_id
+geometry_msgs/Pose pose
