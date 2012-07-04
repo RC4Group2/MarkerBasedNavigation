@@ -11,4 +11,5 @@
   <depend package="mbn_msgs" />
   <depend package="mbn_marker_locator" />
   <depend package="std_srvs" />
+  <depend package="yaml_cpp" />
 </package>
