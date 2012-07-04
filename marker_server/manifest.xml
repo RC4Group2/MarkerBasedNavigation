@@ -1,10 +1,8 @@
 <package>
-  <description brief="mbn_follower">
-
-     mbn_follower
-
+  <description brief="marker_server">
+   Node to provide access to marker lists.
   </description>
-  <author>Andreas</author>
+  <author>RC4G2</author>
   <license>BSD</license>
   <review status="unreviewed" notes=""/>
   <url>http://ros.org/wiki/mbn_follower</url>

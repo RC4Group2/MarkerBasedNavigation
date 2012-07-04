@@ -29,4 +29,4 @@ rosbuild_gensrv()
 #rosbuild_add_executable(example examples/example.cpp)
 #target_link_libraries(example ${PROJECT_NAME})
 
-rosbuild_add_executable(mbn_follower src/MarkerServer.cpp)
+rosbuild_add_executable(marker_server src/MarkerServer.cpp)

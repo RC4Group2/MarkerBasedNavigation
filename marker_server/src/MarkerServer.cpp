@@ -4,9 +4,9 @@
 
 #include <ros/ros.h>
 
-#include <mbn_follower/MarkerData.h>
-#include <mbn_follower/EnumerateList.h>
-#include <mbn_follower/MarkerList.h>
+#include <marker_server/MarkerData.h>
+#include <marker_server/EnumerateList.h>
+#include <marker_server/MarkerList.h>
 
 class MarkerServer
 {
@@ -19,10 +19,10 @@ private:
   typedef std::map<std::string, mbn_msgs::MarkersIDs> _marker_map_t;
   _marker_map_t _marker_map;
   
-  typedef std::map<int, mbn_follower::MarkerData::Response> _marker_metadata_map_t;  
+  typedef std::map<int, marker_server::MarkerData::Response> _marker_metadata_map_t;  
   _marker_metadata_map_t _marker_metadata_map;
   
-  bool MarkerData(mbn_follower::MarkerData::Request& req, mbn_follower::MarkerData::Response& res)
+  bool MarkerData(marker_server::MarkerData::Request& req, marker_server::MarkerData::Response& res)
   {
     _marker_metadata_map_t::const_iterator it;
     it=
@@ -37,7 +37,7 @@ private:
     return false;
   }
   
-  bool EnumerateList(mbn_follower::EnumerateList::Request& req, mbn_follower::EnumerateList::Response& res)
+  bool EnumerateList(marker_server::EnumerateList::Request& req, marker_server::EnumerateList::Response& res)
   {
     for(_marker_map_t::iterator it = _marker_map.begin(); it != _marker_map.end(); ++it)
       res.names.push_back(it->first);
@@ -45,7 +45,7 @@ private:
     return true;
   }
   
-  bool MarkerList(mbn_follower::MarkerList::Request& req, mbn_follower::MarkerList::Response& res)
+  bool MarkerList(marker_server::MarkerList::Request& req, marker_server::MarkerList::Response& res)
   {
     _marker_map_t::const_iterator it;
     it = _marker_map.find(req.name);
@@ -86,7 +86,7 @@ public:
     _marker_map["pathA1_A2"].markersIDs = aux_path1;
     _marker_map["pathA2_A1"].markersIDs = aux_path2;
     
-    mbn_follower::MarkerData::Response stupid_data1, stupid_data2;
+    marker_server::MarkerData::Response stupid_data1, stupid_data2;
     stupid_data1.pose_ref_frame_id = "default";
     stupid_data1.pose.position.x = 0.0;
     stupid_data1.pose.position.y = 0.0;
