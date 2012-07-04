@@ -1,0 +1,16 @@
+<package>
+  <description brief="mbn_follower">
+
+     mbn_follower
+
+  </description>
+  <author>Andreas</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/mbn_follower</url>
+  <depend package="roscpp" />
+  <depend package="nav_msgs" />
+  <depend package="mbn_msgs" />
+  <depend package="mbn_marker_locator" />
+  <depend package="std_srvs" />
+</package>
