@@ -69,21 +69,22 @@ public:
     _marker_position_service = _nh.advertiseService("marker_data", &MarkerServer::MarkerData, this);
     _enumerate_marker_lists = _nh.advertiseService("enumerate_list", &MarkerServer::EnumerateList, this);
     
-    std::vector<int> aux_path1;
+    mbn_msgs::MarkersIDs::_markersIDs_type aux_path1;
     aux_path1.push_back(1);
     aux_path1.push_back(2);
     aux_path1.push_back(3);
     aux_path1.push_back(4);
     aux_path1.push_back(5);
     
-    std::vector<int> aux_path2;
+    mbn_msgs::MarkersIDs::_markersIDs_type aux_path2;
     aux_path2.push_back(5);
     aux_path2.push_back(4);
     aux_path2.push_back(3);
     aux_path2.push_back(2);
     aux_path2.push_back(1);
-    //_marker_map.push_back(std::make_pair("pathA1_A2",aux_path1));
-    //_marker_map.push_back(std::make_pair("pathA2_A1",aux_path2));
+   
+    _marker_map["pathA1_A2"].markersIDs = aux_path1;
+    _marker_map["pathA2_A1"].markersIDs = aux_path2;
     
     mbn_follower::MarkerData::Response stupid_data1, stupid_data2;
     stupid_data1.pose_ref_frame_id = "default";
@@ -103,8 +104,8 @@ public:
     stupid_data2.pose.orientation.y = 0.0;
     stupid_data2.pose.orientation.z = 0.0;
     stupid_data2.pose.orientation.w = 1.0; 
-    //_marker_metadata_map.push_back(std::make_pair(1,stupid_data1));
-    //_marker_metadata_map.push_back(std::make_pair(5,stupid_data2));
+    _marker_metadata_map[1] = stupid_data1;
+    _marker_metadata_map[5] = stupid_data2;
     
   }
 };
