@@ -1,0 +1,22 @@
+<package>
+  <description brief="marker_follower">
+
+     marker_follower
+
+  </description>
+  <author>Tim Niemueller</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/marker_follower</url>
+  <depend package="roscpp"/>
+  <depend package="tf"/>
+  <depend package="move_base_msgs"/>
+  <depend package="actionlib"/>
+  <depend package="actionlib_msgs"/>
+  <depend package="marker_server"/>
+  <depend package="mbn_common"/>
+  <depend package="mbn_msgs"/>
+
+</package>
+
+
