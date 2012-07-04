@@ -13,6 +13,7 @@
 #include <mbn_common/MarkerPathIteratorCoordination.hpp>
 #include <mbn_common/MarkerPathIteratorComputation.hpp>
 #include <mbn_common/MarkerPathPlannerComputation.hpp>
+#include <tf/transform_listener.h>
 
 using namespace mbn_common;
 
@@ -45,10 +46,28 @@ public:
     markers_a2_a1_.push_back(13);
     markers_a2_a1_.push_back(14);
     markers_a2_a1_.push_back(15);
+
+    as_.start();
   }
 
+  void
+  move_base_done_cb(const actionlib::SimpleClientGoalState& state,
+		    const move_base_msgs::MoveBaseResultConstPtr& result)
+  {
+    tf::Stamped<tf::Pose>
+      ident(tf::Transform(tf::Quaternion(0, 0, 0, 1),
+			  tf::Vector3(0, 0, 0)), ros::Time(0,0),
+	    "/base_link");
+    tf::Stamped<tf::Pose> odom_pose;
+    tf_.transformPose("/odom", ident, odom_pose);
+  
+    ms_comp_.setOdometryPose(odom_pose);
+    ms_coord_.notifySearchPoseReached();
+    ms_coord_.notifyTimeElapsed();
+  }
 
-  void as_callback(const marker_follower::FollowMarkerListGoalConstPtr& goal)
+  void
+  as_callback(const marker_follower::FollowMarkerListGoalConstPtr& goal)
   {
     if (goal->list_name == "A1_A2") {
       ms_comp_.setTargetMarkerIDs(markers_a1_a2_);
@@ -57,9 +76,24 @@ public:
     }
     last_path_ = goal->list_name;
     ms_coord_.notifyTargetMarkerIDsReceived();
+    ms_coord_.notifyTimeElapsed();
+
+    tf::Pose next_pose;
+    if ( ms_comp_.getNextSearchPose(next_pose) ) {
+      move_base_msgs::MoveBaseGoal goal;
+      goal.target_pose.header.frame_id = "/base_link";
+      tf::poseTFToMsg(next_pose, goal.target_pose.pose);
+
+      ac_.sendGoal(goal,
+		   boost::bind(&MarkerFollower::move_base_done_cb, this, _1, _2));
+    } else {
+      as_.setAborted(marker_follower::FollowMarkerListResult(), "Aborting on failing to get next search pose");
+    }
+
 
     goal_ = goal;
   }
+
 
   void
   markers_pos_cb(const mbn_msgs::MarkersPosesConstPtr &markers)
@@ -118,7 +152,8 @@ public:
  private:
   ros::NodeHandle &rosnode;
   actionlib::SimpleActionServer<marker_follower::FollowMarkerListAction> as_;
-  actionlib::SimpleActionClient<move_base_msgs::MoveBaseAction> ac_;
+typedef actionlib::SimpleActionClient<move_base_msgs::MoveBaseAction> MBClient;
+  MBClient ac_;
   ros::ServiceClient mrkserv_client_;
  
   MarkerSearcherCoordination     ms_coord_;
@@ -136,6 +171,8 @@ public:
   std::string last_path_;
 
   marker_follower::FollowMarkerListGoalConstPtr goal_;
+
+  tf::TransformListener tf_;
 };
 
 int
