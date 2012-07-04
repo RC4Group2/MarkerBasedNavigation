@@ -1,0 +1,4 @@
+- name: pathA1_A2
+  ids: [1,2,3,4,5]
+- name: pathA2_A1
+  ids: [11,12,13,14,15]

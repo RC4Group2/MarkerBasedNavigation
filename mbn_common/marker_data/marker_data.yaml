@@ -1,0 +1,16 @@
+- id: 1
+  ref_frame: A1
+  position: [0, 0, 0]
+  orientation: [0, 0, 0, 1]
+- id: 5
+  ref_frame: A1
+  position: [0, 0, 0]
+  orientation: [0, 0, 0, 1]
+- id: 11
+  ref_frame: A1
+  position: [0, 0, 0]
+  orientation: [0, 0, 0, 1]
+- id: 15
+  ref_frame: A1
+  position: [0, 0, 0]
+  orientation: [0, 0, 0, 1]
