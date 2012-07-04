@@ -12,7 +12,5 @@
   <depend package="nav_msgs" />
   <depend package="mbn_msgs" />
   <depend package="mbn_marker_locator" />
-
+  <depend package="std_srvs" />
 </package>
-
-
