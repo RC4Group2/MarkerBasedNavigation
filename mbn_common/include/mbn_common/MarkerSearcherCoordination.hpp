@@ -106,7 +106,7 @@ public:
 	 * This method trigger the state machine and has to be called
 	 * when a new target marker is provided
 	 */
-	void notifyTargetMarkerIDReceived();
+	void notifyTargetMarkerIDsReceived();
 
 	/**
 	 * This method trigger the state machine and has to be called

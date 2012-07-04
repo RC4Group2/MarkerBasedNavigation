@@ -60,89 +60,89 @@
 namespace mbn_common{
 
 
-MarkerSearcherComputation::MarkerSearcherComputation(){
+  MarkerSearcherComputation::MarkerSearcherComputation(){
+  }
 
-	targetMarkerID = -1;
+  MarkerSearcherComputation::~MarkerSearcherComputation(void){
+  }
 
-}
+  void MarkerSearcherComputation::setTargetMarkerIDs(std::vector<int> markers){
 
-MarkerSearcherComputation::~MarkerSearcherComputation(void){
-}
+    this->tempTargetMarkerIDs = markers;
+  }
 
-void MarkerSearcherComputation::setTargetMarkerID(int targetMarkerId){
+  void MarkerSearcherComputation::updateTargetMarkerIDs(){
 
-	this->tempTargetMarkerID = targetMarkerId;
-}
+    targetMarkerIDs = tempTargetMarkerIDs;
+    markerFound = false;
+  }
 
-void MarkerSearcherComputation::updateTargetMarkerID(){
+  void MarkerSearcherComputation::setOdometryPose(tf::Pose lastOdometryPose){
+    this->lastOdometryPose = lastOdometryPose;
+  }
 
-	targetMarkerID = tempTargetMarkerID;
-	markerFound = false;
-}
+  void MarkerSearcherComputation::setVisibleMarkersIDs(vector<int> visibleMarkersIDs){
 
-void MarkerSearcherComputation::setOdometryPose(tf::Pose lastOdometryPose){
-	this->lastOdometryPose = lastOdometryPose;
-}
+    this->visibleMarkersIDs = visibleMarkersIDs;
 
-void MarkerSearcherComputation::setVisibleMarkersIDs(vector<int> visibleMarkersIDs){
+  }
 
-	this->visibleMarkersIDs = visibleMarkersIDs;
+  bool MarkerSearcherComputation::searchTargetIDsInVisibleMarkersIDs(){
 
-}
+    if(markerFound){
+      return true;
+    }
+    for(vector<int>::iterator it = visibleMarkersIDs.begin(); it != visibleMarkersIDs.end(); it++)
+      {
+	for (vector<int>::iterator jt = targetMarkerIDs.begin(); jt != visibleMarkersIDs.end(); jt++)
+	  {
 
-bool MarkerSearcherComputation::searchTargetIDInVisibleMarkersIDs(){
+	    if(*it == *jt){
+	      nextSearchPose = lastOdometryPose;
+	      poseReturned = false;
+	      markerFound = true;
+	      return true;
+	    }
+	  }
+      }
+    return false;
 
-	if(markerFound){
-		return true;
-	}
-	for(vector<int>::iterator it = visibleMarkersIDs.begin(); it != visibleMarkersIDs.end(); it++){
+  }
 
-		if(*it == targetMarkerID){
-			nextSearchPose = lastOdometryPose;
-			poseReturned = false;
-			markerFound = true;
-			return true;
-		}
+  bool MarkerSearcherComputation::getNextSearchPose(tf::Pose& returnPose){
+    if(poseReturned){
+      return false;
+    }
+    returnPose.setOrigin(nextSearchPose.getOrigin());
+    returnPose.setRotation(nextSearchPose.getRotation());
+    poseReturned = true;
+    return true;
+  }
 
-	}
-	return false;
+  double MarkerSearcherComputation::getAngleIncrement(){
+    return angleIncrement;
+  }
 
-}
-
-bool MarkerSearcherComputation::getNextSearchPose(tf::Pose& returnPose){
-	if(poseReturned){
-		return false;
-	}
-	returnPose.setOrigin(nextSearchPose.getOrigin());
-	returnPose.setRotation(nextSearchPose.getRotation());
-	poseReturned = true;
-	return true;
-}
-
-double MarkerSearcherComputation::getAngleIncrement(){
-	return angleIncrement;
-}
-
-void MarkerSearcherComputation::setAngleIncrement(double angleIncrement){
-	this->angleIncrement = angleIncrement;
-}
+  void MarkerSearcherComputation::setAngleIncrement(double angleIncrement){
+    this->angleIncrement = angleIncrement;
+  }
 
 
-void MarkerSearcherComputation::computeNextSearchPose(){
+  void MarkerSearcherComputation::computeNextSearchPose(){
 
-	if(markerFound){
-		// nextSearchPose was saved when the  variable markerFound
-		// was set to true
-		return;
-	}
+    if(markerFound){
+      // nextSearchPose was saved when the  variable markerFound
+      // was set to true
+      return;
+    }
 
-	poseReturned = false;
-	nextSearchPose.setOrigin(lastOdometryPose.getOrigin());
-	double theta = angles::normalize_angle(
-			tf::getYaw(lastOdometryPose.getRotation()) + angleIncrement);
-	nextSearchPose.setRotation(tf::createQuaternionFromYaw(theta));
+    poseReturned = false;
+    nextSearchPose.setOrigin(lastOdometryPose.getOrigin());
+    double theta = angles::normalize_angle(
+					   tf::getYaw(lastOdometryPose.getRotation()) + angleIncrement);
+    nextSearchPose.setRotation(tf::createQuaternionFromYaw(theta));
 
-}
+  }
 
 }
 

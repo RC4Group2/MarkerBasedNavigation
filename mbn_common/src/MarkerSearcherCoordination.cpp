@@ -73,11 +73,11 @@ MarkerSearcherCoordination::MarkerSearcherCoordination(MarkerSearcherComputation
 MarkerSearcherCoordination::~MarkerSearcherCoordination(void){
 }
 
-void MarkerSearcherCoordination::notifyTargetMarkerIDReceived(){
+void MarkerSearcherCoordination::notifyTargetMarkerIDsReceived(){
 
 	if(currentState == IDLE){
 
-		markerSearcherComputation->updateTargetMarkerID();
+		markerSearcherComputation->updateTargetMarkerIDs();
 		markerFound = false;
 		motionDone = false;
 		outputEvent = "";
@@ -93,7 +93,7 @@ void MarkerSearcherCoordination::notifyVisibleMarkersIDsReceived(){
 	if(currentState == TARGET_RECEIVED ||
 			currentState == MOVING){
 
-		markerFound = markerSearcherComputation->searchTargetIDInVisibleMarkersIDs();
+		markerFound = markerSearcherComputation->searchTargetIDsInVisibleMarkersIDs();
 
 		if(currentState == TARGET_RECEIVED && markerFound){
 
