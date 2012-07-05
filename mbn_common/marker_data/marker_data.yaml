@@ -1,16 +1,16 @@
-- id: 1
-  ref_frame: A1
-  position: [0, 0, 0]
-  orientation: [0, 0, 0, 1]
-- id: 5
-  ref_frame: A1
-  position: [0, 0, 0]
-  orientation: [0, 0, 0, 1]
-- id: 11
-  ref_frame: A1
-  position: [0, 0, 0]
-  orientation: [0, 0, 0, 1]
-- id: 15
-  ref_frame: A1
-  position: [0, 0, 0]
+- id: 0
+  ref_frame: common
+  position: [0.42, 2.09, 0]
+  orientation: [0, 0, 1, 0]
+- id: 8
+  ref_frame: common
+  position: [1.69, -0.69, 0]
+  orientation: [0, 0, -0.7, 0.71]
+- id: 10
+  ref_frame: common
+  position: [1.79, -0.86, 0]
+  orientation: [0, 0, 0.72, 0.69]
+- id: 18
+  ref_frame: common
+  position: [0.33, 2.24, 0]
   orientation: [0, 0, 0, 1]
