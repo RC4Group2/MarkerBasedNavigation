@@ -113,7 +113,8 @@ public:
 
     if (_nh.getParam("marker_lists", read_lists))
     {
-      std::ifstream fin(read_lists.c_str());
+        ROS_INFO("Trying to parse marker_data from  %s",read_lists.c_str());
+        std::ifstream fin(read_lists.c_str());
 	YAML::Parser parser(fin);
 	YAML::Node doc;
 	parser.GetNextDocument(doc);
@@ -145,11 +146,9 @@ public:
      _marker_map["pathA2_A1"].markersIDs = aux_path2;
     }
 
-    ROS_INFO("Trying to parse file?");
-
     if (_nh.getParam("marker_data", read_data))
     {
-      ROS_INFO("Trying to parse %s",read_data.c_str());
+      ROS_INFO("Trying to parse marker_data from  %s",read_data.c_str());
       std::ifstream fin(read_data.c_str());
 	YAML::Parser parser(fin);
 	YAML::Node doc;
