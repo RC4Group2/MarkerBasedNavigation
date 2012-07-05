@@ -1,6 +1,8 @@
 #include <map>
 #include <vector>
 #include <string>
+#include <fstream>
+#include <cstdio>
 
 #include <ros/ros.h>
 
@@ -9,6 +11,45 @@
 #include <marker_server/MarkerList.h>
 #include <yaml-cpp/yaml.h>
 
+typedef struct _MarkerListStruct {
+   std::string name;
+   mbn_msgs::MarkersIDs::_markersIDs_type  ids;
+} MarkerListStruct;
+
+typedef  struct _MarkerDataStruct {
+   int id;
+   marker_server::MarkerData::Response data;
+} MarkerDataStruct;
+
+  
+void operator >> (const YAML::Node& node, MarkerListStruct& list) {
+   node["name"] >> list.name;
+   const YAML::Node& ids = node["ids"];
+   for(unsigned i=0;i<ids.size();i++) {
+     int id;
+     ids[i] >> id;
+     list.ids.push_back(id);
+   }
+}
+
+void operator >> (const YAML::Node& node, MarkerDataStruct& mdata) {
+   node["id"] >> mdata.id;
+   node["ref_frame"] >> mdata.data.pose_ref_frame_id;
+   const YAML::Node& pos = node["position"];
+   if(pos.size()>=3) {
+     pos[0] >> mdata.data.pose.position.x;
+     pos[1] >> mdata.data.pose.position.y;
+     pos[2] >> mdata.data.pose.position.z;
+   }
+   const YAML::Node& orient = node["orientation"];
+   if(orient.size()>=4) {
+      orient[0] >> mdata.data.pose.orientation.x;
+      orient[1] >> mdata.data.pose.orientation.y;
+      orient[2] >> mdata.data.pose.orientation.z;
+      orient[3] >> mdata.data.pose.orientation.w;
+   }
+}
+
 class MarkerServer
 {
 private:
@@ -16,43 +57,6 @@ private:
   ros::ServiceServer _list_marker_service;
   ros::ServiceServer _marker_position_service;
   ros::ServiceServer _enumerate_marker_lists;
-
-  struct MarkerList {
-   std::string name;
-   std::vector <mbn_msgs::MarkersIDs> ids;
-  };
-
- struct MarkerData {
-   int name;
-   marker_server::MarkerData::Response data;
-  };
-
-  
-void operator >> (const YAML::Node& node, MarkerList& list) {
-   node["name"] >> list.name;
-   const YAML::Node& ids = node["ids"];
-   for(unsigned i=0;i<ids.size();i++) {
-      list.ids.push_back(ids[i].as<int>());
-   }
-}
-
-void operator >> (const YAML::Node& node, MarkerData& mdata) {
-   mdata.id = node["id"].as<int>();
-   node["ref_frame"] >> mdata.pose_ref_frame_id;
-   const YAML::Node& ids = node["position"];
-   if(ids.size()>=3) {
-      mdata.pose.position.x = ids[0].as<int>();
-      mdata.pose.position.y = ids[1].as<int>();
-      mdata.pose.position.z = ids[2].as<int>();
-   }
-   ids = node["orientation"];
-   if(ids.size()>=4) {
-      mdata.pose.orientation.x = ids[0].as<int>();
-      mdata.pose.orientation.y = ids[0].as<int>();
-      mdata.pose.orientation.z = ids[0].as<int>();
-      mdata.pose.orientation.w = ids[0].as<int>();
-   }
-}
 
   typedef std::map<std::string, mbn_msgs::MarkersIDs> _marker_map_t;
   _marker_map_t _marker_map;
@@ -107,16 +111,18 @@ public:
    
     std::string read_lists, read_data;
 
-    if (nh.getParam("marker_lists", read_lists))
+    if (_nh.getParam("marker_lists", read_lists))
     {
-	std::ifstream fin(read_lists);
+      std::ifstream fin(read_lists.c_str());
 	YAML::Parser parser(fin);
 	YAML::Node doc;
+	parser.GetNextDocument(doc);
 	for(unsigned i=0;i<doc.size();i++)
 	{
-	      MarkerList list;
+	      MarkerListStruct list;
 	      doc[i] >> list;
-	      _marker_map[list.name].markersIDS = list.ids;
+	       mbn_msgs::MarkersIDs::_markersIDs_type parsedIds = list.ids;
+	       _marker_map[list.name].markersIDs = parsedIds;
    	}
     }
     else
@@ -138,15 +144,19 @@ public:
      _marker_map["pathA1_A2"].markersIDs = aux_path1;
      _marker_map["pathA2_A1"].markersIDs = aux_path2;
     }
-    
-    if (nh.getParam("marker_data", read_data))
+
+    ROS_INFO("Trying to parse file?");
+
+    if (_nh.getParam("marker_data", read_data))
     {
-	std::ifstream fin(read_lists);
+      ROS_INFO("Trying to parse %s",read_data.c_str());
+      std::ifstream fin(read_data.c_str());
 	YAML::Parser parser(fin);
 	YAML::Node doc;
+	parser.GetNextDocument(doc);
 	for(unsigned i=0;i<doc.size();i++)
 	{
-	      MarkerData mdata;
+	      MarkerDataStruct mdata;
 	      doc[i] >> mdata;
               _marker_metadata_map[mdata.id] = mdata.data;
    	}
