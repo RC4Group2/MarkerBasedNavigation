@@ -1,0 +1,18 @@
+<package>
+  <description brief="marker_go">
+    Command line tool to go to next visible marker.
+  </description>
+  <author>Tim Niemueller</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>None</url>
+  <depend package="roscpp"/>
+  <depend package="tf"/>
+  <depend package="move_base_msgs"/>
+  <depend package="actionlib"/>
+  <depend package="actionlib_msgs"/>
+  <depend package="mbn_msgs"/>
+  <depend package="sensor_msgs"/>
+  <depend package="marker_server"/>
+</package>
+
