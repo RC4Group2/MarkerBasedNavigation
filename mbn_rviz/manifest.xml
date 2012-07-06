@@ -1,0 +1,18 @@
+<package>
+  <description brief="mbn_rviz">
+
+     mbn_rviz
+
+  </description>
+  <author>Tim Niemueller</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/mbn_rviz</url>
+
+  <depend package="mbn_msgs" />
+  <depend package="visualization_msgs" />
+
+
+</package>
+
+
