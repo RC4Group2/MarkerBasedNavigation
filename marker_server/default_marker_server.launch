@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<launch>
+	<node name="marker_server" type="marker_server" pkg="marker_server" respawn="false" output="screen">
+	  <param name="marker_lists" value="$(find marker_server)/../mbn_common/marker_data/marker_lists.yaml" />
+	  <param name="marker_data" value="$(find marker_server)/../mbn_common/marker_data/marker_data.yaml" />
+      </node>
+</launch>
+
+
+
